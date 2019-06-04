@@ -1,9 +1,32 @@
 #include <stdio.h>
 #include "sm_uart.h"
+#include "sm_crc.h"
 
 void u_call(char*data,int len)
 {
-    printf("data:%s %d\n",data,len);
+    if(len>=4)
+    {
+        char length=data[0];
+        char cc=data[1];
+        short cmd=(data[2]&0xff)|((data[3]&0xff)<<8);
+        if(length+4==len&&sm_crc(data+4,length)==cc)
+        {
+            if(cmd==0)
+            {
+                printf("log:%s\n",data+4);
+            }
+        }
+        else
+        {
+            printf("err data\n");
+        }
+        
+    }
+    else
+    {
+        printf("err data\n");
+    }
+    
 }
 
 int main()
