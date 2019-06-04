@@ -13,7 +13,7 @@
 
 static int ret;
 static int fd;
-
+//添加
 /*
  * 安全读写函数
  */
