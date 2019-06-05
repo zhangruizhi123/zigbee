@@ -87,7 +87,7 @@ int main()
             //sm_uart_write(str,strlen(str));
             sm_uart_write(data,12);
             
-            sleep(5);
+            sleep(1);
             printf("send\n");
         }
     }else{
