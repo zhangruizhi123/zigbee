@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <signal.h>
 #include "sm_uart.h"
 #include "sm_crc.h"
 #include "mqtt.h"
@@ -48,11 +49,23 @@ void u_call(char*data,int len)
     }
     
 }
-
+//程序退出时候会调动到这里
+void service_destory(int signum)
+{
+    //当按下ctrl + C时候
+    if(signum==2)
+    {
+        sm_uart_destory();
+        mqtt_destory();
+        printf("exit......\n");
+        exit(0);
+    }
+    
+}
 int main()
 {
     printf("hello world \n");
-    
+    signal(SIGINT, service_destory);
     if(sm_uart_init("/dev/ttyUSB0")==1){
        
        char bb[]={0xE1,0xC5,'h','e','l','l','o',0};
