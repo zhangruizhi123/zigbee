@@ -2,7 +2,7 @@
 #include "sm_uart.h"
 #include "sm_crc.h"
 #include "mqtt.h"
-
+//添加一行注释
 void u_call(char*data,int len)
 {
     if(len>=4)
