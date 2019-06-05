@@ -2,6 +2,7 @@
 #include "sm_uart.h"
 #include "sm_crc.h"
 #include "mqtt.h"
+#include "cJSON.h"
 //添加一行注释
 void u_call(char*data,int len)
 {
@@ -42,6 +43,7 @@ void u_call(char*data,int len)
 int main()
 {
     printf("hello world \n");
+    
     /*
     if(sm_uart_init("/dev/ttyUSB0")==1){
         sm_uart_callback(u_call);
@@ -57,12 +59,20 @@ int main()
     */
    if(mqtt_init()==1)
    {
-       char*str="hello mqtt!\n";
+       //char*str="hello mqtt!\n";
+       cJSON*user=cJSON_CreateObject();
+       cJSON_AddStringToObject(user,"name","zhangsan");
+       cJSON_AddNumberToObject(user,"age",22);
+       cJSON_AddBoolToObject(user,"sex",true);
+       char*str=cJSON_Print(user);
        while(1)
        {
+           
            mqtt_publish("test:",str,strlen(str));
            sleep(2);
        }
+
+       cJSON_Delete(user);
    }
    printf("program exit...\n");
     return 0;

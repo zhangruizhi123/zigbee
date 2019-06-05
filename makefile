@@ -3,7 +3,7 @@ CC = gcc
 #项目根路径
 PROJECT_PATH = /home/telrob/Desktop/zigbee/zigbee
 #引用到的库
-MLIB = -lpthread -lmosquitto
+MLIB = -lpthread -lmosquitto -lm
 #头文件包含路径
 MINCLUDE = -I ${PROJECT_PATH}/include
 #项目生产文件路径
