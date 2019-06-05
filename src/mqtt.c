@@ -11,10 +11,17 @@ static struct mosquitto *mosq = NULL;
 
 static pthread_t  tid1;
 
+//定义网关的mac地址
+#define MAC "11:22:33:44:55"
+//定义topic的前缀
+#define profix "iot-smarthome"
+//产品的productkey由后台分配，唯一
+#define productKey "123456"
+
 static void my_message_callback(struct mosquitto *mosq, void *userdata, const struct mosquitto_message *message)
 {
     if(message->payloadlen){
-        printf("%s %s", message->topic, message->payload);
+        printf("topic:%s   data:%s\n", message->topic, message->payload);
     }else{
         printf("%s (null)\n", message->topic);
     }
@@ -26,7 +33,10 @@ static void my_connect_callback(struct mosquitto *mosq, void *userdata, int resu
     int i;
     if(!result){
         /* Subscribe to broker information topics on successful connect. */
-        mosquitto_subscribe(mosq, NULL, "test:", 2);
+        char subTopic[1024];
+        sprintf(subTopic,"%s/%s/%s/%s",profix,productKey,MAC,"sub");
+        printf("sub topic:%s\n",subTopic);
+        mosquitto_subscribe(mosq, NULL, subTopic, 2);
     }else{
         fprintf(stderr, "Connect failed\n");
     }
@@ -89,8 +99,10 @@ int mqtt_destory()
     mosquitto_lib_cleanup();
 }
 
-int mqtt_publish(char*topic,char*data,int len)
+int mqtt_publish(char*data,int len)
 {
-    return mosquitto_publish(mosq,NULL,topic,len,data,0,0);
+    char subTopic[1024];
+    sprintf(subTopic,"%s/%s/%s/%s",profix,productKey,MAC,"pub");
+    return mosquitto_publish(mosq,NULL,subTopic,len,data,0,0);
 }
 

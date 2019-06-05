@@ -327,6 +327,7 @@ static void uart_create_thread(void*data)
     int ret=0;
     while(1)
     {
+        memset(buff,0,512);
         ret = uart_read(fd,buff,512);
         if(ret>0)
         {

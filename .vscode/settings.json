@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "sm_crc.h": "c"
+        "sm_crc.h": "c",
+        "mqtt.h": "c",
+        "cjson.h": "c"
     }
 }
