@@ -13,7 +13,7 @@
 #include<errno.h>
 #include <pthread.h>
 
-typedef void (*uart_callback)(char*data,int len);
+typedef void (*uart_callback)(unsigned char*data,int len);
 
 //初始化函数
 int sm_uart_init(char*name);

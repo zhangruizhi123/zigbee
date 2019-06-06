@@ -37,6 +37,8 @@ static ssize_t safe_write(int fd, const void *vptr, size_t n)
 
 static ssize_t safe_read(int fd,void *vptr,size_t n)
 {
+
+/*
     size_t nleft;
     ssize_t nread;
     int first=0;
@@ -71,6 +73,77 @@ static ssize_t safe_read(int fd,void *vptr,size_t n)
         //printf(":::%ld %ld %s\n",nread,nleft,(char*)vptr);
     }
     return (n-nleft);
+
+    */
+
+   
+   //现在版本的读函数判断开头两个字节
+   int index=0;
+   int nread=0;
+   unsigned char flag=0;
+   int total=0;
+   unsigned int number=0;
+   unsigned int lastNumber=0;
+   char*data=vptr;
+   while(1)
+   {
+       //先读取一个字节
+       nread = read(fd,&flag,1);
+       if(index>0&&nread<=0)
+       {
+           continue;
+       }
+       else if(nread <= 0)
+        {
+            if(errno == EINTR)//被信号中断
+                nread = 0;
+            else
+                return -1;
+        }
+        number++;
+        //读取到第一个字节
+        if(index==0&&flag==0x55)
+        {
+            //记录上一次数据
+            data[index]=flag;
+            index++;
+            lastNumber=number;
+        }
+        else if(index==1 && flag==0x55)
+        {
+            //当两个55AA不在同一个位置时
+            data[0]=flag;
+            continue;
+        }
+        else if(index==1 && flag==0xAA)
+        {
+            data[index]=flag;
+            index++;
+        }
+        else if(index==1 &&lastNumber+1>=number)
+        {
+            total=0;
+            break;
+        }
+        else if(index>=2)
+        {
+            data[index]=flag;
+            if(index==2)
+            {
+                total=flag+6;
+            }
+            index++;
+            if(index>=total)
+            {
+                break;
+            }
+        }else{
+            total=0;
+            continue;
+        }
+   }
+    return total;
+    
 }
 
 static int uart_open(int fd,const char *pathname)
@@ -289,7 +362,7 @@ static int uart_read(int fd,char *r_buf,size_t len)
             cnt = safe_read(fd,r_buf,len);
             if(cnt == -1)
             {
-                fprintf(stderr,"read error!\n");
+                //fprintf(stderr,"read error!\n");
                 return -1;
             }
             return cnt;

@@ -6,23 +6,21 @@
 #include "cJSON.h"
 unsigned short idadd=0;
 //添加一行注释 11111
-void u_call(char*data,int len)
+void u_call(unsigned char*data,int len)
 {
-    //会出现沾包问题
-    if(len>=4)
+    if(len>=6&&data[0]==0x55&&data[1]==0xAA)
     {
-        unsigned char length=data[0];
-        char cc=data[1];
-        unsigned short cmd=(data[2]&0xff)|((data[3]&0xff)<<8);
-        if(length+4==len&&sm_crc(data+4,length)==cc)
+        unsigned char length=data[2];
+        unsigned short cmd=(data[4]&0xff)|((data[5]&0xff)<<8);
+        if(length+6==len)
         {
             if(cmd==0)
             {
-                printf("log:%s\n",data+4);
+                printf("log:%s\n",data+6);
             }
             else if(cmd==1)
             {
-                unsigned char*datas=data+4;
+                unsigned char*datas=data+6;
                 printf("mac:%02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\n",datas[0],datas[1],datas[2],
                 datas[3],datas[4],datas[5],datas[6],datas[7]);
                 idadd=(short)(datas[8]&0xFF)|((datas[9]&0xFF)<<8);
@@ -33,7 +31,6 @@ void u_call(char*data,int len)
         else
         {
             printf("err data1\n");
-            
             int i=0;
             for(i=0;i<len;i++){
                 printf("%02X ",data[i]);
@@ -88,7 +85,7 @@ int main()
             sm_uart_write(data,12);
             
             sleep(1);
-            printf("send\n");
+            //printf("send\n");
         }
     }else{
         printf("Open UART failed!\n");
