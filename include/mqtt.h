@@ -9,6 +9,7 @@
 int mqtt_init();
 //发生数据
 int mqtt_publish(char*data,int len);
+int mqtt_publish2(char*top,char*data,int len);
 //销毁函数
 int mqtt_destory();
 

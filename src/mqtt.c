@@ -1,7 +1,7 @@
 #include "mqtt.h"
 
 
-#define HOST "localhost"
+#define HOST "192.168.86.1"
 #define PORT  1883
 #define KEEP_ALIVE 60
 
@@ -36,7 +36,9 @@ static void my_connect_callback(struct mosquitto *mosq, void *userdata, int resu
         char subTopic[1024];
         sprintf(subTopic,"%s/%s/%s/%s",profix,productKey,MAC,"sub");
         printf("sub topic:%s\n",subTopic);
-        mosquitto_subscribe(mosq, NULL, subTopic, 2);
+        mosquitto_subscribe(mosq, NULL, "000", 2);
+         mosquitto_subscribe(mosq, NULL, "111", 2);
+          mosquitto_subscribe(mosq, NULL, "222", 2);
     }else{
         fprintf(stderr, "Connect failed\n");
     }
@@ -104,5 +106,10 @@ int mqtt_publish(char*data,int len)
     char subTopic[1024];
     sprintf(subTopic,"%s/%s/%s/%s",profix,productKey,MAC,"pub");
     return mosquitto_publish(mosq,NULL,subTopic,len,data,0,0);
+}
+
+int mqtt_publish2(char*top,char*data,int len)
+{
+    return mosquitto_publish(mosq,NULL,top,len,data,0,0);
 }
 

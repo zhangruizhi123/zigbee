@@ -4,6 +4,7 @@
 #include "sm_crc.h"
 #include "mqtt.h"
 #include "cJSON.h"
+#include "device_info.h"
 unsigned short idadd=0;
 //添加一行注释 11111
 void u_call(unsigned char*data,int len)
@@ -61,6 +62,8 @@ void service_destory(int signum)
 }
 int main()
 {
+    device_login("BX10mrnDg5","76F1031C000000",NULL);
+    /*
     printf("hello world \n");
     signal(SIGINT, service_destory);
     if(sm_uart_init("/dev/ttyUSB0")==1){
@@ -90,7 +93,7 @@ int main()
     }else{
         printf("Open UART failed!\n");
     }
-
+*/
    /*
    if(mqtt_init()==1)
    {
@@ -98,7 +101,7 @@ int main()
        cJSON*dev=cJSON_CreateObject();
        cJSON_AddStringToObject(dev,"version","1.0.0");
        cJSON_AddStringToObject(dev,"name","light");
-       cJSON_AddStringToObject(dev,"mac","11:22:33:44:55:66");
+       cJSON_AddStringToObject(dev,"mac","76F1031C000000");
        cJSON_AddNumberToObject(dev,"code",22);
 
        cJSON*switchs=cJSON_CreateObject();
@@ -109,8 +112,8 @@ int main()
        printf("json:%s\n",str);
        while(1)
        {
-           
-           mqtt_publish(str,strlen(str));
+           mqtt_publish2("/sub/2e453f5bf8e8461b83f9df6a577a9328",str,strlen(str));
+           //mqtt_publish(str,strlen(str));
            sleep(2);
        }
 

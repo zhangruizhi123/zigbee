@@ -2,6 +2,8 @@
     "files.associations": {
         "sm_crc.h": "c",
         "mqtt.h": "c",
-        "cjson.h": "c"
+        "cjson.h": "c",
+        "sm_http.h": "c",
+        "device_info.h": "c"
     }
 }
