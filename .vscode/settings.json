@@ -4,6 +4,7 @@
         "mqtt.h": "c",
         "cjson.h": "c",
         "sm_http.h": "c",
-        "device_info.h": "c"
+        "device_info.h": "c",
+        "string.h": "c"
     }
 }

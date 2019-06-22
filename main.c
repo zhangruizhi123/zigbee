@@ -62,7 +62,13 @@ void service_destory(int signum)
 }
 int main()
 {
-    device_login("BX10mrnDg5","76F1031C000000",NULL);
+    struct device_info devInfo;
+    int res=device_login("BX10mrnDg5","76F1031C000000",&devInfo);
+    if(res==1)
+    {
+        printf("pub:%s\n",devInfo.pub);
+        printf("sub:%s\n",devInfo.sub);
+    }
     /*
     printf("hello world \n");
     signal(SIGINT, service_destory);
